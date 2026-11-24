@@ -6,12 +6,12 @@ Tor Control Panel is a GUI for the Tor Expert Bundle. This tool is separate from
 
 ## Run
 
-Double-click `src\tcp-tor-updater.bat`. It starts the script with execution policy bypass, so Windows does not need a `.ps1` file association.
+Double-click `tcp-tor-updater.bat`. It starts the script with execution policy bypass, so Windows does not need a `.ps1` file association.
 
 Or run the script directly:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\src\tcp-tor-updater.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File .\tcp-tor-updater.ps1
 ```
 
 The script looks for Tor Control Panel in `C:\Program Files\TorControlPanel`, then in the same folder as `tcp-tor-updater.ps1`. For a portable copy, put `tcp-tor-updater.bat` and `tcp-tor-updater.ps1` next to `TorControlPanel.exe`.
