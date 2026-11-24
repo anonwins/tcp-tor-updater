@@ -4,15 +4,11 @@
 # Script version
 $ScriptVersion = "1.0.1"
 
-# Function to get the script/executable path (works both as script and compiled exe)
+# Directory containing this script.
 function Get-ScriptPath {
-    if ($MyInvocation.MyCommand.CommandType -eq "ExternalScript") {
-        $ScriptPath = Split-Path -Parent -Path $MyInvocation.MyCommand.Definition
-    } else {
-        $ScriptPath = Split-Path -Parent -Path ([Environment]::GetCommandLineArgs()[0])
-        if (!$ScriptPath) { $ScriptPath = "." }
-    }
-    return $ScriptPath
+    if ($PSScriptRoot) { return $PSScriptRoot }
+    if ($PSCommandPath) { return (Split-Path -Parent $PSCommandPath) }
+    throw "Could not determine script directory"
 }
 
 # Function to find TorControlPanel.exe and return its directory path
@@ -231,15 +227,12 @@ try {
         Write-Host "[!] Administrator required, elevating..." -ForegroundColor Yellow
         
         try {
-            $scriptPath = Get-ScriptPath
-            if ($MyInvocation.MyCommand.CommandType -eq "ExternalScript") {
-                $exePath = "powershell.exe"
-                $arguments = "-NoProfile -ExecutionPolicy Bypass -File `"$scriptPath\$($MyInvocation.MyCommand.Name)`""
-            } else {
-                $exePath = Join-Path $scriptPath "tcp-tor-updater.exe"
-                $arguments = "-NoProfile -ExecutionPolicy Bypass"
+            if (-not $PSCommandPath) {
+                throw "Could not determine script path"
             }
-            Start-Process -FilePath $exePath -ArgumentList $arguments -Verb RunAs
+            Start-Process -FilePath "powershell.exe" -ArgumentList @(
+                "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", $PSCommandPath
+            ) -Verb RunAs
             exit 0
         }
         catch {

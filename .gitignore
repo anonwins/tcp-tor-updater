@@ -1,6 +1,3 @@
-# ps2exe output. Published builds live on GitHub Releases.
-*.exe
-
 # Windows
 Thumbs.db
 Desktop.ini
